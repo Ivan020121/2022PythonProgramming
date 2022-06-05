@@ -21,41 +21,36 @@ class ResultAnalysis:
         if results is None:
             return None
         else:
-            print('ACC: ' + str(self.ACC(results)))
-            print('MCC: ' + str(self.MCC(results)))
+            description = self.result_description(results)
+            print('ACC: ' + str(self.ACC(description)))
+            print('MCC: ' + str(self.MCC(description)))
+
+    def result_description(self, results):
+        description = {}
+        TP = TN = FP = FN = 0
+        for result in results:
+            if (result[0][0] is True) and (result[0][1] is True):
+                TP += 1
+            elif (result[0][0] is True) and (result[0][1] is False):
+                FN += 1
+            elif (result[0][0] is False) and (result[0][1] is True):
+                FP += 1
+            elif (result[0][0] is False) and (result[0][1] is False):
+                TN += 1
+            else:
+                pass
+        return [TP, TN, FP, FN]
 
     # acc = (TP + TN) / (TP + TN + FP + FN)
-    def ACC(self, data):
+    def ACC(self, description):
         # accuracy_score(y_true=, y_pred=)
-        TP = TN = FP = FN = 0
-        for result in data:
-            if (result[0][0] is True) and (result[0][1] is True):
-                TP += 1
-            elif (result[0][0] is True) and (result[0][1] is False):
-                FN += 1
-            elif (result[0][0] is False) and (result[0][1] is True):
-                FP += 1
-            elif (result[0][0] is False) and (result[0][1] is False):
-                TN += 1
-            else:
-                pass
-        return (TP + TN) / len(data)
+        TP, TN, FP, FN = description
+        return (TP + TN) / (TP + FP + TN + FN)
 
     # mcc = (TP + TN) / (TP + TN + FP + FN)
-    def MCC(self, data):
+    def MCC(self, description):
         # matthews_corrcoef(y_true=, y_pred=)
-        TP = TN = FP = FN = 0
-        for result in data:
-            if (result[0][0] is True) and (result[0][1] is True):
-                TP += 1
-            elif (result[0][0] is True) and (result[0][1] is False):
-                FN += 1
-            elif (result[0][0] is False) and (result[0][1] is True):
-                FP += 1
-            elif (result[0][0] is False) and (result[0][1] is False):
-                TN += 1
-            else:
-                pass
+        TP, TN, FP, FN = description
         numerator = (TP * TN) - (FP * FN)
         denominator = math.sqrt((TP + FP) * (TP + FN) * (TN + FP) * (TN + FN))
         if (denominator == 0):
