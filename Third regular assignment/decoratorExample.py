@@ -22,8 +22,8 @@ class ResultAnalysis:
             return None
         else:
             description = self.result_description(results)
-            print('ACC: ' + str(self.ACC(description)))
-            print('MCC: ' + str(self.MCC(description)))
+            print('ACC: ' + str(self.acc(description)))
+            print('MCC: ' + str(self.mcc(description)))
 
     def result_description(self, results):
         description = {}
@@ -42,13 +42,13 @@ class ResultAnalysis:
         return [TP, TN, FP, FN]
 
     # acc = (TP + TN) / (TP + TN + FP + FN)
-    def ACC(self, description):
+    def acc(self, description):
         # accuracy_score(y_true=, y_pred=)
         TP, TN, FP, FN = description
         return (TP + TN) / (TP + FP + TN + FN)
 
     # mcc = (TP + TN) / (TP + TN + FP + FN)
-    def MCC(self, description):
+    def mcc(self, description):
         # matthews_corrcoef(y_true=, y_pred=)
         TP, TN, FP, FN = description
         numerator = (TP * TN) - (FP * FN)
@@ -57,7 +57,7 @@ class ResultAnalysis:
             denominator = 1
         return numerator / denominator
 
-# generate random number with acc decorator
+# generate random number with ResultAnalysis decorator
 @ResultAnalysis
 def structDataSampling(**kwargs):
     result = list()
@@ -109,5 +109,4 @@ if __name__ == '__main__':
     print(__doc__)
     filePath = 'myStruct.txt'
     para = readParameters(filePath)
-    static = 'ACC'
     ans = structDataSampling(**para)
